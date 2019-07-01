@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '8.0'
+
+target 'XNNetWorkManager_Example' do
+  pod 'XNNetWorkManager', :path => '../'
+
+  target 'XNNetWorkManager_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
