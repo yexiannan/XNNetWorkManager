@@ -15,9 +15,9 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
     HttpMethod_Get,
 };
 
-@class AFHTTPRequestSerializer;
-@class AFSecurityPolicy;
-@class AFHTTPSessionManager;
+//@class AFHTTPRequestSerializer;
+//@class AFSecurityPolicy;
+//@class AFHTTPSessionManager;
 
 @interface XNHTTPManage : NSObject
 
@@ -55,7 +55,7 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
  */
 + (NSURLSessionDataTask *)Post:(NSString *)URLString
                     parameters:(nullable id)parameters
-             requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
+             requestSerializer:(id)requestSerializer
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
@@ -64,7 +64,7 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
  */
 + (NSURLSessionDataTask *)Post:(NSString *)URLString
                     parameters:(nullable id)parameters
-                securityPolicy:(AFSecurityPolicy *)securityPolicy
+                securityPolicy:(id)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
@@ -73,8 +73,8 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
  */
 + (NSURLSessionDataTask *)Post:(NSString *)URLString
                     parameters:(nullable id)parameters
-             requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
-                securityPolicy:(AFSecurityPolicy *)securityPolicy
+             requestSerializer:(id)requestSerializer
+                securityPolicy:(id)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
@@ -85,7 +85,7 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
  */
 + (NSURLSessionDataTask *)Get:(NSString *)URLString
                     parameters:(nullable id)parameters
-             requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
+             requestSerializer:(id)requestSerializer
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
@@ -94,7 +94,7 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
  */
 + (NSURLSessionDataTask *)Get:(NSString *)URLString
                     parameters:(nullable id)parameters
-                securityPolicy:(AFSecurityPolicy *)securityPolicy
+                securityPolicy:(id)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
@@ -103,8 +103,8 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
  */
 + (NSURLSessionDataTask *)Get:(NSString *)URLString
                     parameters:(nullable id)parameters
-             requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
-                securityPolicy:(AFSecurityPolicy *)securityPolicy
+             requestSerializer:(id)requestSerializer
+                securityPolicy:(id)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
@@ -116,7 +116,7 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
                                     URLString:(NSString *)URLString
                                    parameters:(nullable id)parameters
                                       headers:(nullable NSDictionary <NSString *, NSString *> *)headers
-                                      manager:(AFHTTPSessionManager *)manager
+                                      manager:(id)manager
                                      progress:(nullable void(^)(NSProgress *uploadProgress))progress
                                       success:(nullable void(^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
                                       failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
@@ -130,7 +130,7 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
                           name:(NSString *)name
                     parameters:(nullable id)parameters
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
-             requestSerializer:(nullable AFHTTPRequestSerializer *)requestSerializer
+             requestSerializer:(nullable id)requestSerializer
                       progerss:(nullable void(^)(NSProgress *uploadProgress))progress
                        success:(nullable void(^)(NSURLSessionTask *task,id _Nullable responseObject))success
                        failure:(nullable void(^)(NSURLSessionTask *_Nullable task,NSError *error))failure;
@@ -143,7 +143,7 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
                           name:(NSString *)name
                     parameters:(nullable id)parameters
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
-             requestSerializer:(nullable AFHTTPRequestSerializer *)requestSerializer
+             requestSerializer:(nullable id)requestSerializer
                       progerss:(nullable void(^)(NSProgress *uploadProgress))progress
                        success:(nullable void(^)(NSURLSessionTask *task,id _Nullable responseObject))success
                        failure:(nullable void(^)(NSURLSessionTask *_Nullable task,NSError *error))failure;
