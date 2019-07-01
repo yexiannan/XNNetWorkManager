@@ -8,6 +8,8 @@
 
 #import "XNViewController.h"
 #import "XNHTTPManage.h"
+#import "AFNetworking.h"
+
 
 @interface XNViewController ()
 

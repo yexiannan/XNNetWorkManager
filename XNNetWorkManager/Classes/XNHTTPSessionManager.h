@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AFHTTPSessionManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface XNHTTPSessionManager : AFHTTPSessionManager
+@class AFHTTPSessionManager;
+
+@interface XNHTTPSessionManager : NSObject
 
 /*
  *  使用单例类创建请求解决内存泄漏

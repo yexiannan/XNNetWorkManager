@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AFNetworking.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,6 +14,10 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
     HttpMethod_Post,
     HttpMethod_Get,
 };
+
+@class AFHTTPRequestSerializer;
+@class AFSecurityPolicy;
+@class AFHTTPSessionManager;
 
 @interface XNHTTPManage : NSObject
 

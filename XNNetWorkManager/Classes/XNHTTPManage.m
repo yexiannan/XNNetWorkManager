@@ -8,6 +8,8 @@
 
 #import "XNHTTPManage.h"
 #import "XNHTTPSessionManager.h"
+#import "AFNetworking.h"
+
 
 @implementation XNHTTPManage
 
