@@ -40,11 +40,11 @@
 
 - (IBAction)allConfigHttpRequest:(id)sender {
     
-    NSString *url = @"http://finance.lianlianche.com:8109/carLoan/listApply";
-    NSDictionary *parameters = @{@"pageNo":@"1",@"pageSize":@"10",@"departmentId":@"4o4a527/QhytS64sA62Zbw"};
+    NSString *url = @"http://www.baidu.com";
+    NSDictionary *parameters = @{@"pageNo":@"1",@"pageSize":@"10"};
     AFJSONRequestSerializer *serializer = [AFJSONRequestSerializer serializer];
     
-    NSDictionary <NSString *,NSString *> *headers = @{@"X-uid":@"Jdej4fzCS/yZX3Uru3T1+Q",@"X-token":@"SYS-USER-TOKEN:20000:7057e90c9b4b67522f27d2edff98959982d0c2edf594013b:9729362a5d0023896edde4051d63f4cd0b086327ff7348c1"};
+    NSDictionary <NSString *,NSString *> *headers = @{@"key1":@"value1",@"key2":@"value2"};
     
     [XNHTTPManage Post:url parameters:parameters requestSerializer:serializer securityPolicy:[AFSecurityPolicy defaultPolicy] headers:headers success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"----- responseObject = %@",responseObject);
