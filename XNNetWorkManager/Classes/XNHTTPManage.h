@@ -16,10 +16,6 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
     HttpMethod_Get,
 };
 
-@class AFHTTPRequestSerializer;
-@class AFSecurityPolicy;
-@class AFHTTPSessionManager;
-
 @interface XNHTTPManage : NSObject
 
 /**

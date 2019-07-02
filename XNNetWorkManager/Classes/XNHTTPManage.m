@@ -8,8 +8,6 @@
 
 #import "XNHTTPManage.h"
 #import "XNHTTPSessionManager.h"
-#import "AFNetworking.h"
-
 
 @implementation XNHTTPManage
 
@@ -25,7 +23,7 @@
     AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
     //设置超时时间
     [serializer willChangeValueForKey:@"timeoutInterval"];
-    serializer.timeoutInterval = 10.f;
+    serializer.timeoutInterval = 20.f;
     [serializer didChangeValueForKey:@"timeoutInterval"];
     
     
