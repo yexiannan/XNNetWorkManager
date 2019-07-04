@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'XNNetWorkManager'
-  s.version          = '0.1.2'
+  s.version          = '0.1.3'
   s.summary          = 'A short description of XNNetWorkManager.'
 
 # This description is used to generate tags and improve search results.
@@ -37,7 +37,8 @@ TODO: Add long description of the pod here.
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-   s.user_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
   # s.frameworks = 'UIKit', 'MapKit'
    s.dependency 'AFNetworking'
+
+  s.prefix_header_contents = '#import "AFNetworking.h"'
 end

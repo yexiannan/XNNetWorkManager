@@ -7,7 +7,6 @@
 //
 
 #import "XNHTTPSessionManager.h"
-#import "AFHTTPSessionManager.h"
 
 static AFHTTPSessionManager *postManager;
 static AFHTTPSessionManager *getManager;
