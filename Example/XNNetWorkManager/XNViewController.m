@@ -10,7 +10,6 @@
 #import "XNHTTPManage.h"
 #import "AFNetworking.h"
 
-
 @interface XNViewController ()
 
 @end
@@ -21,7 +20,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,7 +45,8 @@
     
     NSDictionary <NSString *,NSString *> *headers = @{@"key1":@"value1",@"key2":@"value2"};
     
-    [XNHTTPManage Post:url parameters:parameters requestSerializer:serializer securityPolicy:[AFSecurityPolicy defaultPolicy] headers:headers success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    
+    [XNHTTPManage Post:url parameters:parameters requestSerializer:serializer securityPolicy:[AFSecurityPolicy defaultPolicy] headers:headers duplicateType:DuplicateType_CancelCurrentRequest  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"----- responseObject = %@",responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"----- error = %@",error);

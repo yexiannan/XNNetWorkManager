@@ -8,8 +8,32 @@
 
 #import "XNHTTPManage.h"
 #import "XNHTTPSessionManager.h"
+#import <CommonCrypto/CommonDigest.h>
+
+@interface XNHTTPManage ()
+//请求缓存,避免请求重复提交
+@property (nonatomic, strong) NSMutableDictionary <NSString *, NSURLSessionDataTask *>*requestCache;
+@end
 
 @implementation XNHTTPManage
++ (XNHTTPManage *)httpManager{
+    static dispatch_once_t oncetoken;
+    static XNHTTPManage *shareinstance;
+    dispatch_once(&oncetoken, ^{
+        shareinstance = [[self alloc] init];
+        shareinstance.requestCache = [[NSMutableDictionary alloc] init];
+        shareinstance.serializer = [AFHTTPRequestSerializer serializer];
+        shareinstance.securityPolicy = [AFSecurityPolicy defaultPolicy];
+        shareinstance.headers = nil;
+    });
+    return shareinstance;
+}
+
+- (void)httpManagerInitWithAFHTTPRequestSerializer:(AFHTTPRequestSerializer *)serializer AFSecurityPolicy:(AFSecurityPolicy *)securityPolicy Headers:(NSDictionary<NSString *,NSString *> *)headers{
+    self.serializer = serializer;
+    self.securityPolicy = securityPolicy;
+    self.headers = headers;
+}
 
 #pragma mark - 基础请求
 /**
@@ -19,19 +43,13 @@
                     parameters:(nullable id)parameters
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure{
-    
-    AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
-    //设置超时时间
-    [serializer willChangeValueForKey:@"timeoutInterval"];
-    serializer.timeoutInterval = 20.f;
-    [serializer didChangeValueForKey:@"timeoutInterval"];
-    
-    
+
     return [self Post:URLString
            parameters:parameters
-    requestSerializer:serializer
-       securityPolicy:[AFSecurityPolicy defaultPolicy]
-              headers:nil
+    requestSerializer:[XNHTTPManage httpManager].serializer
+       securityPolicy:[XNHTTPManage httpManager].securityPolicy
+              headers:[XNHTTPManage httpManager].headers
+        duplicateType:DuplicateType_NotHandle
               success:success
               failure:failure];
 }
@@ -44,17 +62,12 @@
                       success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                       failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure{
     
-    AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
-    //设置超时时间
-    [serializer willChangeValueForKey:@"timeoutInterval"];
-    serializer.timeoutInterval = 20.f;
-    [serializer didChangeValueForKey:@"timeoutInterval"];
-    
     return [self Get:URLString
            parameters:parameters
-    requestSerializer:serializer
-       securityPolicy:[AFSecurityPolicy defaultPolicy]
-              headers:nil
+    requestSerializer:[XNHTTPManage httpManager].serializer
+       securityPolicy:[XNHTTPManage httpManager].securityPolicy
+              headers:[XNHTTPManage httpManager].headers
+       duplicateType:DuplicateType_NotHandle
              success:success
               failure:failure];
 }
@@ -72,8 +85,9 @@
     return [self Post:URLString
            parameters:parameters
     requestSerializer:requestSerializer
-       securityPolicy:[AFSecurityPolicy defaultPolicy]
+       securityPolicy:[XNHTTPManage httpManager].securityPolicy
               headers:headers
+        duplicateType:DuplicateType_NotHandle
               success:success
               failure:failure];
 }
@@ -88,9 +102,10 @@
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure{
     return [self Post:URLString
            parameters:parameters
-    requestSerializer:[AFHTTPRequestSerializer serializer]
+    requestSerializer:[XNHTTPManage httpManager].serializer
        securityPolicy:securityPolicy
               headers:headers
+        duplicateType:DuplicateType_NotHandle
               success:success
               failure:failure];
 }
@@ -102,6 +117,7 @@
              requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                 securityPolicy:(AFSecurityPolicy *)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
+                 duplicateType:(HTTPManager_DuplicateType)duplicateType
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure{
     
@@ -114,6 +130,7 @@
                  parameters:parameters
                     headers:headers
                     manager:manager
+              duplicateType:duplicateType
                    progress:nil
                     success:success
                     failure:failure];
@@ -134,6 +151,7 @@
     requestSerializer:requestSerializer
        securityPolicy:[AFSecurityPolicy defaultPolicy]
               headers:headers
+       duplicateType:DuplicateType_NotHandle
               success:success
               failure:failure];
 }
@@ -151,6 +169,7 @@
    requestSerializer:[AFHTTPRequestSerializer serializer]
       securityPolicy:securityPolicy
              headers:headers
+       duplicateType:DuplicateType_NotHandle
              success:success
              failure:failure];
 }
@@ -162,6 +181,7 @@
             requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                securityPolicy:(AFSecurityPolicy *)securityPolicy
                       headers:(nullable NSDictionary <NSString *, NSString *> *)headers
+                duplicateType:(HTTPManager_DuplicateType)duplicateType
                       success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                       failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure{
     
@@ -174,6 +194,7 @@
                  parameters:parameters
                     headers:headers
                     manager:manager
+              duplicateType:duplicateType
                    progress:nil
                     success:success
                     failure:failure];
@@ -187,52 +208,108 @@
                           parameters:(nullable id)parameters
                              headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                              manager:(AFHTTPSessionManager *)manager
+                       duplicateType:(HTTPManager_DuplicateType)duplicateType
                             progress:(void (^)(NSProgress * _Nonnull))progress
                              success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                              failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure {
     
+    //重复请求判断
+    switch (duplicateType) {
+            //不是第一次请求则取消请求
+        case DuplicateType_SingleRequest:
+            if ([self requestRepeatedJudgmentWithUrl:URLString Param:parameters]) {
+                return nil;
+            }
+            break;
+            
+            //之前请求未完成，取消当前请求
+        case DuplicateType_CancelCurrentRequest:
+            if ([self requestRepeatedJudgmentWithUrl:URLString Param:parameters]) {
+                
+                return nil;
+            }
+            break;
+            
+            //之前请求未完成，取消之前请求重新提交
+        case DuplicateType_CancelPreviousRequest:
+            if ([self requestRepeatedJudgmentWithUrl:URLString Param:parameters]) {
+                
+                NSString *md5String = [self md5StringWithUrlString:URLString Params:parameters];
+                NSURLSessionDataTask *task = [[XNHTTPManage httpManager].requestCache objectForKey:md5String];
+                
+                if (task == nil) {
+                    [[XNHTTPManage httpManager].requestCache removeObjectForKey:md5String];
+                } else {
+                    [[XNHTTPManage httpManager].requestCache removeObjectForKey:md5String];
+                    [task cancel];
+                }
+            }
+            break;
+            
+        default:
+            break;
+    }
+    
+    //设置请求头
     for (NSString *headerField in headers.keyEnumerator) {
         [manager.requestSerializer setValue:headers[headerField] forHTTPHeaderField:headerField];
     }
     
+    //创建请求任务
+    NSURLSessionDataTask *sessionDataTask = nil;
+
     if (httpMethod == HttpMethod_Post) {
         
-        return [manager POST:URLString parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
+        sessionDataTask = [manager POST:URLString parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
             if (progress) {
                 progress(uploadProgress);
             }
         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             if (success) {
+                //移除缓存
+                [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
                 success(task,responseObject);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             if (failure) {
+                //移除缓存
+                [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
                 failure(task,error);
             }
         }];
         
     } else if (httpMethod == HttpMethod_Get) {
         
-        return [manager GET:URLString parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
+        sessionDataTask = [manager GET:URLString parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
             if (progress) {
                 progress(downloadProgress);
             }
         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             if (success) {
+                //移除缓存
+                [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
                 success(task,responseObject);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             if (failure) {
+                //移除缓存
+                [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
                 failure(task,error);
             }
         }];
         
     } else {
         NSAssert(NO, @"目前只支持POST、GET请求");
-        return nil;
     }
     
+   
+    
+    [self addRequestCacheWithUrl:URLString Param:parameters SessionDataTask:sessionDataTask duplicateType:duplicateType];
+    return sessionDataTask;
+    
 }
+
+
 
 #pragma mark - 上传图片
 /**
@@ -310,6 +387,79 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
                          failure(task, error);
                      }
                  }];
+}
+
+
+#pragma mark - 私有方法
+/**
+ * 将当前请求与请求缓存中的数据对比,判断是否是重复请求
+ */
++ (BOOL)requestRepeatedJudgmentWithUrl:(NSString *)url Param:(nullable id)param{
+    NSString *md5String = [self md5StringWithUrlString:url Params:param];
+    __block BOOL isRepeated = NO;
+    
+    [[XNHTTPManage httpManager].requestCache enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSURLSessionDataTask * _Nonnull obj, BOOL * _Nonnull stop) {
+        if ([key isEqualToString:md5String]) {
+            isRepeated = YES;
+            *stop = YES;
+        }
+    }];
+    
+    NSLog(@"-----dict = %@",[XNHTTPManage httpManager].requestCache);
+    
+    return isRepeated;
+}
+
+/**
+ * 添加请求缓存
+ */
++ (void)addRequestCacheWithUrl:(NSString *)url Param:(nullable id)param SessionDataTask:(NSURLSessionDataTask *)sessionDataTask duplicateType:(HTTPManager_DuplicateType)duplicateType{
+    if (duplicateType != DuplicateType_NotHandle) {
+        NSString *md5String = [self md5StringWithUrlString:url Params:param];
+        [[XNHTTPManage httpManager].requestCache setObject:sessionDataTask forKey:md5String];
+    }
+}
+
+/**
+ * 移除请求缓存
+ */
++ (void)removeRequestCacheWithUrl:(NSString *)url Param:(nullable id)param duplicateType:(HTTPManager_DuplicateType)duplicateType{
+    if (duplicateType != DuplicateType_NotHandle) {
+        NSString *md5String = [self md5StringWithUrlString:url Params:param];
+        [[XNHTTPManage httpManager].requestCache removeObjectForKey:md5String];
+    }
+}
+
+/**
+ * 将url与参数字符串转为md5字符串
+ */
++ (NSString *)md5StringWithUrlString:(NSString *)urlString Params:(nullable id)params{
+    NSString *string = [NSString stringWithFormat:@"url=%@,params=%@",urlString,[self dictionaryToJson:params]];
+    
+    const char *cStr = [string UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    
+    CC_MD5(cStr, (CC_LONG)strlen(cStr), digest);
+    
+    NSMutableString *result = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [result appendFormat:@"%02X", digest[i]];
+    }
+    
+    return result;
+}
+
+/**
+ * 字典转json格式字符串  字典为nil时返回@""
+ */
++ (NSString *)dictionaryToJson:(NSDictionary *)dic{
+    if(dic){
+        NSError *parseError = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
+        
+        return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    return @"";
 }
 
 @end

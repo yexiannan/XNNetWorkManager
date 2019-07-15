@@ -15,11 +15,36 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
     HttpMethod_Get,
 };
 
+typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
+    /**不做处理,即可重复提交*/
+    DuplicateType_NotHandle,
+    
+    /**取消之前的提交*/
+    DuplicateType_CancelPreviousRequest,
+    
+    /**取消当前的提交*/
+    DuplicateType_CancelCurrentRequest,
+    
+    /**整个app运行期间只发送一次*/
+    DuplicateType_SingleRequest,
+};
+
 @class AFHTTPRequestSerializer;
 @class AFSecurityPolicy;
 @class AFHTTPSessionManager;
 
 @interface XNHTTPManage : NSObject
+@property (nonatomic, strong) AFHTTPRequestSerializer *serializer;
+@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
+@property (nonatomic, copy, nullable) NSDictionary *headers;
+
++ (XNHTTPManage *)httpManager;
+/**
+ * 初始化网络请求模块
+ */
+- (void)httpManagerInitWithAFHTTPRequestSerializer:(nonnull AFHTTPRequestSerializer *)serializer
+                                  AFSecurityPolicy:(nullable AFSecurityPolicy *)securityPolicy
+                                           Headers:(nullable NSDictionary <NSString *, NSString *> *)headers;
 
 /**
  *  @param urlString 网络URL
@@ -30,6 +55,7 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
  *  @param progress 上传、下载进度
  *  @param success 成功block
  *  @param failure 失败block
+ *  @param duplicateType 重复请求处理,默认为DuplicateType_NotHandle
  */
 
 
@@ -70,13 +96,14 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
 /**
- * Post配置requestSerializer和securityPolicy Post: parameters: requestSerializer: securityPolicy: headers: progress: success: failure:
+ * Post配置requestSerializer、securityPolicy和duplicateType Post: parameters: requestSerializer: securityPolicy: headers: duplicateType: progress: success: failure:
  */
 + (NSURLSessionDataTask *)Post:(NSString *)URLString
                     parameters:(nullable id)parameters
              requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                 securityPolicy:(AFSecurityPolicy *)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
+                 duplicateType:(HTTPManager_DuplicateType)duplicateType
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
 
@@ -100,13 +127,14 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
 /**
- * Get配置requestSerializer和securityPolicy Get: parameters: requestSerializer: securityPolicy: headers: progress: success: failure:
+ * Get配置requestSerializer、securityPolicy和duplicateType Get: parameters: requestSerializer: securityPolicy: headers: duplicateType: progress: success: failure:
  */
 + (NSURLSessionDataTask *)Get:(NSString *)URLString
                     parameters:(nullable id)parameters
              requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                 securityPolicy:(AFSecurityPolicy *)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
+                duplicateType:(HTTPManager_DuplicateType)duplicateType
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
 #pragma mark - 根据httpMethod发送请求
@@ -118,6 +146,7 @@ typedef NS_ENUM(NSInteger, HttpMethod) {
                                    parameters:(nullable id)parameters
                                       headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                                       manager:(AFHTTPSessionManager *)manager
+                                duplicateType:(HTTPManager_DuplicateType)duplicateType
                                      progress:(nullable void(^)(NSProgress *uploadProgress))progress
                                       success:(nullable void(^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
                                       failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
