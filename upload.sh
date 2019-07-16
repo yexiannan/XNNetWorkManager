@@ -2,7 +2,7 @@
 
 # 此脚本必须放在.podspec同一层级下
 
-oldVersionString=`grep -E 's.version.*=' XNBaseController.podspec`
+oldVersionString=`grep -E 's.version.*=' XNNetWorkManager.podspec`
 
 #分割字符串
 arry=(${oldVersionString//./ })
