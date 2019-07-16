@@ -14,8 +14,10 @@ PODS:
   - AFNetworking/Serialization (3.2.1)
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
-  - XNNetWorkManager (0.1.3):
+  - SVProgressHUD (2.2.5)
+  - XNNetWorkManager (0.1.4):
     - AFNetworking
+    - SVProgressHUD
 
 DEPENDENCIES:
   - XNNetWorkManager (from `../`)
@@ -23,6 +25,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AFNetworking
+    - SVProgressHUD
 
 EXTERNAL SOURCES:
   XNNetWorkManager:
@@ -30,7 +33,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
-  XNNetWorkManager: 95bc85ec44417ddb29713d13fa2129818ef8aacc
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+  XNNetWorkManager: b32609ad878412353e4a20a65dd3c724889b2324
 
 PODFILE CHECKSUM: ca5cf40c40e6866309d00134c3ba78a71e03c923
 

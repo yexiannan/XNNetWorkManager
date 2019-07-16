@@ -30,11 +30,13 @@
 }
 
 - (IBAction)defaultHttpRequest:(id)sender {
-    [XNHTTPManage Post:@"" parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [XNHTTPManage Post:@"" parameters:nil hudAnimation:YES success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"----- responseObject = %@",responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"----- error = %@",error);
     }];
+    
+    
 }
 
 - (IBAction)allConfigHttpRequest:(id)sender {
@@ -46,7 +48,7 @@
     NSDictionary <NSString *,NSString *> *headers = @{@"key1":@"value1",@"key2":@"value2"};
     
     
-    [XNHTTPManage Post:url parameters:parameters requestSerializer:serializer securityPolicy:[AFSecurityPolicy defaultPolicy] headers:headers duplicateType:DuplicateType_CancelCurrentRequest  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [XNHTTPManage Post:url parameters:parameters hudAnimation:YES requestSerializer:serializer securityPolicy:[AFSecurityPolicy defaultPolicy] headers:headers duplicateType:DuplicateType_CancelCurrentRequest  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"----- responseObject = %@",responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"----- error = %@",error);
@@ -54,7 +56,7 @@
 }
 
 - (IBAction)uploadImageDataRequest:(id)sender {
-    [XNHTTPManage POST:@"" imageData:[NSData data] name:@"images" parameters:nil headers:@{@"key1":@"value1",@"key2":@"value2"} requestSerializer:[AFHTTPRequestSerializer serializer] progerss:^(NSProgress * _Nonnull uploadProgress) {
+    [XNHTTPManage POST:@"" imageData:[NSData data] name:@"images" parameters:nil hudAnimation:YES headers:@{@"key1":@"value1",@"key2":@"value2"} requestSerializer:[AFHTTPRequestSerializer serializer] progerss:^(NSProgress * _Nonnull uploadProgress) {
         NSLog(@"----- uploadProgress = %@",uploadProgress);
         UIButton *button = sender;
         [button setTitle:uploadProgress.localizedDescription forState:UIControlStateNormal];

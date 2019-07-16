@@ -65,6 +65,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
  */
 + (NSURLSessionDataTask *)Post:(NSString *)URLString
                     parameters:(nullable id)parameters
+                  hudAnimation:(BOOL)hudAnimation
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
 
@@ -73,6 +74,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
  */
 + (NSURLSessionDataTask *)Get:(NSString *)URLString
                     parameters:(nullable id)parameters
+                 hudAnimation:(BOOL)hudAnimation
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
 
@@ -82,6 +84,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
  */
 + (NSURLSessionDataTask *)Post:(NSString *)URLString
                     parameters:(nullable id)parameters
+                  hudAnimation:(BOOL)hudAnimation
              requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
@@ -91,6 +94,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
  */
 + (NSURLSessionDataTask *)Post:(NSString *)URLString
                     parameters:(nullable id)parameters
+                  hudAnimation:(BOOL)hudAnimation
                 securityPolicy:(AFSecurityPolicy *)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
@@ -100,6 +104,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
  */
 + (NSURLSessionDataTask *)Post:(NSString *)URLString
                     parameters:(nullable id)parameters
+                  hudAnimation:(BOOL)hudAnimation
              requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                 securityPolicy:(AFSecurityPolicy *)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
@@ -113,6 +118,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
  */
 + (NSURLSessionDataTask *)Get:(NSString *)URLString
                     parameters:(nullable id)parameters
+                 hudAnimation:(BOOL)hudAnimation
              requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
@@ -122,6 +128,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
  */
 + (NSURLSessionDataTask *)Get:(NSString *)URLString
                     parameters:(nullable id)parameters
+                 hudAnimation:(BOOL)hudAnimation
                 securityPolicy:(AFSecurityPolicy *)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
@@ -131,6 +138,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
  */
 + (NSURLSessionDataTask *)Get:(NSString *)URLString
                     parameters:(nullable id)parameters
+                  hudAnimation:(BOOL)hudAnimation
              requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                 securityPolicy:(AFSecurityPolicy *)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
@@ -144,6 +152,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
 + (nullable NSURLSessionDataTask *)httpMethod:(HttpMethod)httpMethod
                                     URLString:(NSString *)URLString
                                    parameters:(nullable id)parameters
+                                 hudAnimation:(BOOL)hudAnimation
                                       headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                                       manager:(AFHTTPSessionManager *)manager
                                 duplicateType:(HTTPManager_DuplicateType)duplicateType
@@ -159,6 +168,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
                      imageData:(NSData *)imageData
                           name:(NSString *)name
                     parameters:(nullable id)parameters
+                  hudAnimation:(BOOL)hudAnimation
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
              requestSerializer:(nullable AFHTTPRequestSerializer *)requestSerializer
                       progerss:(nullable void(^)(NSProgress *uploadProgress))progress
@@ -172,6 +182,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
                 imageDataArray:(NSArray <NSData *> *)imageDataArray
                           name:(NSString *)name
                     parameters:(nullable id)parameters
+                  hudAnimation:(BOOL)hudAnimation
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
              requestSerializer:(nullable AFHTTPRequestSerializer *)requestSerializer
                       progerss:(nullable void(^)(NSProgress *uploadProgress))progress
