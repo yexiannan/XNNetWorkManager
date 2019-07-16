@@ -350,6 +350,7 @@
                      imageData:(NSData *)imageData
                           name:(NSString *)name
                     parameters:(nullable id)parameters
+                  hudAnimation:(BOOL)hudAnimation
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
              requestSerializer:(nullable AFHTTPRequestSerializer *)requestSerializer
                       progerss:(nullable void(^)(NSProgress *uploadProgress))progress
@@ -359,6 +360,7 @@
        imageDataArray:@[imageData]
                  name:name
            parameters:parameters
+         hudAnimation:hudAnimation
               headers:headers
     requestSerializer:requestSerializer
              progerss:progress
@@ -373,6 +375,7 @@
                 imageDataArray:(NSArray <NSData *> *)imageDataArray
                           name:(NSString *)name
                     parameters:(nullable id)parameters
+                  hudAnimation:(BOOL)hudAnimation
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
              requestSerializer:(nullable AFHTTPRequestSerializer *)requestSerializer
                       progerss:(nullable void(^)(NSProgress *uploadProgress))progress
