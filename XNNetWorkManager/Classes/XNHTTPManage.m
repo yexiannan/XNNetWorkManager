@@ -232,41 +232,8 @@
                              success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                              failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure {
     
-    //重复请求判断
-    switch (duplicateType) {
-            //不是第一次请求则取消请求
-        case DuplicateType_SingleRequest:
-            if ([self requestRepeatedJudgmentWithUrl:URLString Param:parameters]) {
-                return nil;
-            }
-            break;
-            
-            //之前请求未完成，取消当前请求
-        case DuplicateType_CancelCurrentRequest:
-            if ([self requestRepeatedJudgmentWithUrl:URLString Param:parameters]) {
-                
-                return nil;
-            }
-            break;
-            
-            //之前请求未完成，取消之前请求重新提交
-        case DuplicateType_CancelPreviousRequest:
-            if ([self requestRepeatedJudgmentWithUrl:URLString Param:parameters]) {
-                
-                NSString *md5String = [self md5StringWithUrlString:URLString Params:parameters];
-                NSURLSessionDataTask *task = [[XNHTTPManage httpManager].requestCache objectForKey:md5String];
-                
-                if (task == nil) {
-                    [[XNHTTPManage httpManager].requestCache removeObjectForKey:md5String];
-                } else {
-                    [[XNHTTPManage httpManager].requestCache removeObjectForKey:md5String];
-                    [task cancel];
-                }
-            }
-            break;
-            
-        default:
-            break;
+    if (![self canContiueRequestWithUrlString:URLString parameters:parameters duplicateType:duplicateType failure:failure]) {
+        return nil;
     }
     
     //设置请求头
@@ -288,17 +255,17 @@
                 progress(uploadProgress);
             }
         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            //移除缓存
+            [self endSVProgressHUDWithHudAnimation:hudAnimation];
+            [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
             if (success) {
-                //移除缓存
-                [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
-                [self endSVProgressHUDWithHudAnimation:hudAnimation];
                 success(task,responseObject);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            //移除缓存
+            [self endSVProgressHUDWithHudAnimation:hudAnimation];
+            [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
             if (failure) {
-                //移除缓存
-                [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
-                [self endSVProgressHUDWithHudAnimation:hudAnimation];
                 failure(task,error);
             }
         }];
@@ -310,17 +277,17 @@
                 progress(downloadProgress);
             }
         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            //移除缓存
+            [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
+            [self endSVProgressHUDWithHudAnimation:hudAnimation];
             if (success) {
-                //移除缓存
-                [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
-                [self endSVProgressHUDWithHudAnimation:hudAnimation];
                 success(task,responseObject);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            //移除缓存
+            [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
+            [self endSVProgressHUDWithHudAnimation:hudAnimation];
             if (failure) {
-                //移除缓存
-                [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
-                [self endSVProgressHUDWithHudAnimation:hudAnimation];
                 failure(task,error);
             }
         }];
@@ -393,6 +360,9 @@
         [manager.requestSerializer setValue:headers[headerField] forHTTPHeaderField:headerField];
     }
     
+    if (hudAnimation) {
+        [SVProgressHUD show];
+    }
     
     return [manager POST:urlString
               parameters:parameters
@@ -412,11 +382,13 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
                     
                 }
                  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                     [self endSVProgressHUDWithHudAnimation:hudAnimation];
                      if (responseObject) {
                          success(task, responseObject);
                      }
                  }
                  failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                     [self endSVProgressHUDWithHudAnimation:hudAnimation];
                      if (failure) {
                          failure(task, error);
                      }
@@ -425,6 +397,63 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
 
 
 #pragma mark - 私有方法
+/**
+ * 针对请求重复时的不同情况作处理 判断是否继续执行请求
+ */
++ (BOOL)canContiueRequestWithUrlString:(NSString *)urlString
+                            parameters:(nullable id)parameters
+                         duplicateType:(HTTPManager_DuplicateType)duplicateType
+                              failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure {
+    switch (duplicateType) {
+        case DuplicateType_NotHandle:
+            return YES;
+            break;
+            
+            //不是第一次请求则取消请求
+        case DuplicateType_SingleRequest:
+            if ([self requestRepeatedJudgmentWithUrl:urlString Param:parameters]) {
+                if (failure) {
+                    NSError *err = [[NSError alloc] initWithDomain:@"SingleRequestFailed" code:3 userInfo:nil];
+                    failure(nil,err);
+                }
+                return NO;
+            }
+            break;
+            
+            //之前请求未完成，取消当前请求
+        case DuplicateType_CancelCurrentRequest:
+            if ([self requestRepeatedJudgmentWithUrl:urlString Param:parameters]) {
+                if (failure) {
+                    NSError *err = [[NSError alloc] initWithDomain:@"CancelCurrentRequest" code:2 userInfo:nil];
+                    failure(nil,err);
+                }
+                return NO;
+            }
+            break;
+            
+            //之前请求未完成，取消之前请求重新提交
+        case DuplicateType_CancelPreviousRequest:
+            if ([self requestRepeatedJudgmentWithUrl:urlString Param:parameters]) {
+                
+                NSString *md5String = [self md5StringWithUrlString:urlString Params:parameters];
+                NSURLSessionDataTask *task = [[XNHTTPManage httpManager].requestCache objectForKey:md5String];
+                
+                if (task == nil) {
+                    [[XNHTTPManage httpManager].requestCache removeObjectForKey:md5String];
+                } else {
+                    [[XNHTTPManage httpManager].requestCache removeObjectForKey:md5String];
+                    [task cancel];
+                }
+                return YES;
+            }
+            break;
+            
+        default:
+            break;
+    }
+    return YES;
+}
+
 /**
  * 将当前请求与请求缓存中的数据对比,判断是否是重复请求
  */
@@ -438,8 +467,6 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
             *stop = YES;
         }
     }];
-    
-    NSLog(@"-----dict = %@",[XNHTTPManage httpManager].requestCache);
     
     return isRepeated;
 }

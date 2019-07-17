@@ -56,15 +56,15 @@
 }
 
 - (IBAction)uploadImageDataRequest:(id)sender {
-    [XNHTTPManage POST:@"" imageData:[NSData data] name:@"images" parameters:nil hudAnimation:YES headers:@{@"key1":@"value1",@"key2":@"value2"} requestSerializer:[AFHTTPRequestSerializer serializer] progerss:^(NSProgress * _Nonnull uploadProgress) {
-        NSLog(@"----- uploadProgress = %@",uploadProgress);
-        UIButton *button = sender;
-        [button setTitle:uploadProgress.localizedDescription forState:UIControlStateNormal];
-    } success:^(NSURLSessionTask * _Nonnull task, id  _Nullable responseObject) {
-        NSLog(@"----- responseObject = %@",responseObject);
-    } failure:^(NSURLSessionTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"----- error = %@",error);
-    }];
+//    [XNHTTPManage POST:@"" imageData:[NSData data] name:@"images" parameters:nil hudAnimation:YES headers:@{@"key1":@"value1",@"key2":@"value2"} requestSerializer:[AFHTTPRequestSerializer serializer] progerss:^(NSProgress * _Nonnull uploadProgress) {
+//        NSLog(@"----- uploadProgress = %@",uploadProgress);
+//        UIButton *button = sender;
+//        [button setTitle:uploadProgress.localizedDescription forState:UIControlStateNormal];
+//    } success:^(NSURLSessionTask * _Nonnull task, id  _Nullable responseObject) {
+//        NSLog(@"----- responseObject = %@",responseObject);
+//    } failure:^(NSURLSessionTask * _Nullable task, NSError * _Nonnull error) {
+//        NSLog(@"----- error = %@",error);
+//    }];
 }
 
 
