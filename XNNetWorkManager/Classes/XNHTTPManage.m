@@ -53,6 +53,7 @@
     requestSerializer:[XNHTTPManage httpManager].serializer
        securityPolicy:[XNHTTPManage httpManager].securityPolicy
               headers:[XNHTTPManage httpManager].headers
+  duplicateParameters:nil
         duplicateType:DuplicateType_NotHandle
               success:success
               failure:failure];
@@ -68,14 +69,15 @@
                       failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure{
     
     return [self Get:URLString
-           parameters:parameters
+          parameters:parameters
         hudAnimation:hudAnimation
-    requestSerializer:[XNHTTPManage httpManager].serializer
-       securityPolicy:[XNHTTPManage httpManager].securityPolicy
-              headers:[XNHTTPManage httpManager].headers
+   requestSerializer:[XNHTTPManage httpManager].serializer
+      securityPolicy:[XNHTTPManage httpManager].securityPolicy
+             headers:[XNHTTPManage httpManager].headers
+ duplicateParameters:nil
        duplicateType:DuplicateType_NotHandle
              success:success
-              failure:failure];
+             failure:failure];
 }
 
 #pragma mark - 配置AFHTTPSessionManager
@@ -95,6 +97,7 @@
     requestSerializer:requestSerializer
        securityPolicy:[XNHTTPManage httpManager].securityPolicy
               headers:headers
+  duplicateParameters:nil
         duplicateType:DuplicateType_NotHandle
               success:success
               failure:failure];
@@ -115,6 +118,7 @@
     requestSerializer:[XNHTTPManage httpManager].serializer
        securityPolicy:securityPolicy
               headers:headers
+  duplicateParameters:nil
         duplicateType:DuplicateType_NotHandle
               success:success
               failure:failure];
@@ -128,6 +132,7 @@
              requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                 securityPolicy:(AFSecurityPolicy *)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
+           duplicateParameters:(nullable id)duplicateParameters
                  duplicateType:(HTTPManager_DuplicateType)duplicateType
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure{
@@ -142,6 +147,7 @@
                hudAnimation:hudAnimation
                     headers:headers
                     manager:manager
+        duplicateParameters:duplicateParameters
               duplicateType:duplicateType
                    progress:nil
                     success:success
@@ -165,6 +171,7 @@
     requestSerializer:requestSerializer
        securityPolicy:[AFSecurityPolicy defaultPolicy]
               headers:headers
+ duplicateParameters:nil
        duplicateType:DuplicateType_NotHandle
               success:success
               failure:failure];
@@ -185,6 +192,7 @@
    requestSerializer:[AFHTTPRequestSerializer serializer]
       securityPolicy:securityPolicy
              headers:headers
+ duplicateParameters:nil
        duplicateType:DuplicateType_NotHandle
              success:success
              failure:failure];
@@ -198,6 +206,7 @@
             requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                securityPolicy:(AFSecurityPolicy *)securityPolicy
                       headers:(nullable NSDictionary <NSString *, NSString *> *)headers
+          duplicateParameters:(nullable id)duplicateParameters
                 duplicateType:(HTTPManager_DuplicateType)duplicateType
                       success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                       failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure{
@@ -212,6 +221,7 @@
                hudAnimation:hudAnimation
                     headers:headers
                     manager:manager
+        duplicateParameters:duplicateParameters
               duplicateType:duplicateType
                    progress:nil
                     success:success
@@ -227,12 +237,13 @@
                         hudAnimation:(BOOL)hudAnimation
                              headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                              manager:(AFHTTPSessionManager *)manager
+                 duplicateParameters:(nullable id)duplicateParameters
                        duplicateType:(HTTPManager_DuplicateType)duplicateType
                             progress:(void (^)(NSProgress * _Nonnull))progress
                              success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                              failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure {
     
-    if (![self canContiueRequestWithUrlString:URLString parameters:parameters duplicateType:duplicateType failure:failure]) {
+    if (![self canContiueRequestWithUrlString:URLString parameters:duplicateParameters duplicateType:duplicateType failure:failure]) {
         return nil;
     }
     
@@ -257,14 +268,14 @@
         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             //移除缓存
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
-            [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
+            [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
             if (success) {
                 success(task,responseObject);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             //移除缓存
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
-            [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
+            [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
             if (failure) {
                 failure(task,error);
             }
@@ -278,14 +289,14 @@
             }
         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             //移除缓存
-            [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
+            [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
             if (success) {
                 success(task,responseObject);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             //移除缓存
-            [self removeRequestCacheWithUrl:URLString Param:parameters duplicateType:duplicateType];
+            [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
             if (failure) {
                 failure(task,error);
@@ -298,15 +309,9 @@
     
    
     
-    [self addRequestCacheWithUrl:URLString Param:parameters SessionDataTask:sessionDataTask duplicateType:duplicateType];
+    [self addRequestCacheWithUrl:URLString Param:duplicateParameters SessionDataTask:sessionDataTask duplicateType:duplicateType];
     return sessionDataTask;
     
-}
-
-+ (void)endSVProgressHUDWithHudAnimation:(BOOL)hudAnimation{
-    if (hudAnimation) {
-        [SVProgressHUD dismiss];
-    }
 }
 
 #pragma mark - 上传图片
@@ -317,6 +322,8 @@
                      imageData:(NSData *)imageData
                           name:(NSString *)name
                     parameters:(nullable id)parameters
+           duplicateParameters:(nullable id)duplicateParameters
+                 duplicateType:(HTTPManager_DuplicateType)duplicateType
                   hudAnimation:(BOOL)hudAnimation
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
              requestSerializer:(nullable AFHTTPRequestSerializer *)requestSerializer
@@ -327,6 +334,8 @@
        imageDataArray:@[imageData]
                  name:name
            parameters:parameters
+  duplicateParameters:duplicateParameters
+        duplicateType:duplicateType
          hudAnimation:hudAnimation
               headers:headers
     requestSerializer:requestSerializer
@@ -342,12 +351,18 @@
                 imageDataArray:(NSArray <NSData *> *)imageDataArray
                           name:(NSString *)name
                     parameters:(nullable id)parameters
+           duplicateParameters:(nullable id)duplicateParameters
+                 duplicateType:(HTTPManager_DuplicateType)duplicateType
                   hudAnimation:(BOOL)hudAnimation
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
              requestSerializer:(nullable AFHTTPRequestSerializer *)requestSerializer
                       progerss:(nullable void(^)(NSProgress *uploadProgress))progress
                        success:(nullable void(^)(NSURLSessionTask *task,id _Nullable responseObject))success
                        failure:(nullable void(^)(NSURLSessionTask *_Nullable task,NSError *error))failure{
+    
+    if (![self canContiueRequestWithUrlString:urlString parameters:duplicateParameters duplicateType:duplicateType failure:failure]) {
+        return nil;
+    }
     
     AFHTTPSessionManager *manager = [XNHTTPSessionManager sharedHttpPostSessionManager];
     if (requestSerializer) {
@@ -360,39 +375,45 @@
         [manager.requestSerializer setValue:headers[headerField] forHTTPHeaderField:headerField];
     }
     
+    //创建请求任务
+    NSURLSessionDataTask *sessionDataTask = nil;
+    
     if (hudAnimation) {
         [SVProgressHUD show];
     }
     
-    return [manager POST:urlString
-              parameters:parameters
-constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-    [imageDataArray enumerateObjectsUsingBlock:^(NSData * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (obj) {
-            //enumerateObjectsUsingBlock方式添加自动释放池中，一次上传结束即释放临时变量，处理内存峰值及优化内存使用
-            [formData appendPartWithFileData:obj name:name fileName:@"image.jpeg" mimeType:@"image/jpeg"];
-        }
-    }];
-}
-                progress:^(NSProgress * _Nonnull uploadProgress) {
-                    //上传进度
-                    if (progress) {
-                        progress(uploadProgress);
-                    }
-                    
-                }
-                 success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                     [self endSVProgressHUDWithHudAnimation:hudAnimation];
-                     if (responseObject) {
-                         success(task, responseObject);
-                     }
-                 }
-                 failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                     [self endSVProgressHUDWithHudAnimation:hudAnimation];
-                     if (failure) {
-                         failure(task, error);
-                     }
-                 }];
+    sessionDataTask = [manager POST:urlString
+                         parameters:parameters
+          constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+              [imageDataArray enumerateObjectsUsingBlock:^(NSData * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                  if (obj) {
+                      //enumerateObjectsUsingBlock方式添加自动释放池中，一次上传结束即释放临时变量，处理内存峰值及优化内存使用
+                      [formData appendPartWithFileData:obj name:name fileName:@"image.jpeg" mimeType:@"image/jpeg"];
+                  }
+              }];
+          }
+                           progress:^(NSProgress * _Nonnull uploadProgress) {
+                               //上传进度
+                               if (progress) {
+                                   progress(uploadProgress);
+                               }
+                               
+                           }
+                            success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                                [self endSVProgressHUDWithHudAnimation:hudAnimation];
+                                [self removeRequestCacheWithUrl:urlString Param:duplicateParameters duplicateType:duplicateType];                                if (responseObject) {
+                                    success(task, responseObject);
+                                }
+                            }
+                            failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                                [self endSVProgressHUDWithHudAnimation:hudAnimation];
+                                [self removeRequestCacheWithUrl:urlString Param:duplicateParameters duplicateType:duplicateType];                                if (failure) {
+                                    failure(task, error);
+                                }
+                            }];
+    
+    [self addRequestCacheWithUrl:urlString Param:duplicateParameters SessionDataTask:sessionDataTask duplicateType:duplicateType];
+    return sessionDataTask;
 }
 
 
@@ -521,6 +542,12 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
     return @"";
+}
+
++ (void)endSVProgressHUDWithHudAnimation:(BOOL)hudAnimation{
+    if (hudAnimation) {
+        [SVProgressHUD dismiss];
+    }
 }
 
 @end

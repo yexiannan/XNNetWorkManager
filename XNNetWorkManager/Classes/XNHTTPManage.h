@@ -56,6 +56,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
  *  @param progress 上传、下载进度
  *  @param success 成功block
  *  @param failure 失败block
+ *  @param duplicateParameters 判断请求是否重复参数
  *  @param duplicateType 重复请求处理,默认为DuplicateType_NotHandle
  */
 
@@ -109,6 +110,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
              requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                 securityPolicy:(AFSecurityPolicy *)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
+           duplicateParameters:(nullable id)duplicateParameters
                  duplicateType:(HTTPManager_DuplicateType)duplicateType
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
@@ -143,6 +145,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
              requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                 securityPolicy:(AFSecurityPolicy *)securityPolicy
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
+          duplicateParameters:(nullable id)duplicateParameters
                 duplicateType:(HTTPManager_DuplicateType)duplicateType
                        success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
                        failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
@@ -156,6 +159,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
                                  hudAnimation:(BOOL)hudAnimation
                                       headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                                       manager:(AFHTTPSessionManager *)manager
+                          duplicateParameters:(nullable id)duplicateParameters
                                 duplicateType:(HTTPManager_DuplicateType)duplicateType
                                      progress:(nullable void(^)(NSProgress *uploadProgress))progress
                                       success:(nullable void(^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
@@ -169,6 +173,8 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
                      imageData:(NSData *)imageData
                           name:(NSString *)name
                     parameters:(nullable id)parameters
+           duplicateParameters:(nullable id)duplicateParameters
+                 duplicateType:(HTTPManager_DuplicateType)duplicateType
                   hudAnimation:(BOOL)hudAnimation
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
              requestSerializer:(nullable AFHTTPRequestSerializer *)requestSerializer
@@ -183,6 +189,8 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
                 imageDataArray:(NSArray <NSData *> *)imageDataArray
                           name:(NSString *)name
                     parameters:(nullable id)parameters
+           duplicateParameters:(nullable id)duplicateParameters
+                 duplicateType:(HTTPManager_DuplicateType)duplicateType
                   hudAnimation:(BOOL)hudAnimation
                        headers:(nullable NSDictionary <NSString *, NSString *> *)headers
              requestSerializer:(nullable AFHTTPRequestSerializer *)requestSerializer
