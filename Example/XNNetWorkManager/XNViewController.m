@@ -56,15 +56,14 @@
 }
 
 - (IBAction)uploadImageDataRequest:(id)sender {
-//    [XNHTTPManage POST:@"" imageData:[NSData data] name:@"images" parameters:nil hudAnimation:YES headers:@{@"key1":@"value1",@"key2":@"value2"} requestSerializer:[AFHTTPRequestSerializer serializer] progerss:^(NSProgress * _Nonnull uploadProgress) {
-//        NSLog(@"----- uploadProgress = %@",uploadProgress);
-//        UIButton *button = sender;
-//        [button setTitle:uploadProgress.localizedDescription forState:UIControlStateNormal];
-//    } success:^(NSURLSessionTask * _Nonnull task, id  _Nullable responseObject) {
-//        NSLog(@"----- responseObject = %@",responseObject);
-//    } failure:^(NSURLSessionTask * _Nullable task, NSError * _Nonnull error) {
-//        NSLog(@"----- error = %@",error);
-//    }];
+
+    [XNHTTPManage Get:@"https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx6789a5fb8a7eb060&secret=572319307bb4f96be7c7890bafc7e3c9&code=081QY41a2W17aN0wqg0a2Hid1a2QY41V&grant_type=authorization_code"
+           parameters:nil hudAnimation:YES success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+               
+           } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+               
+           }];
+    
 }
 
 

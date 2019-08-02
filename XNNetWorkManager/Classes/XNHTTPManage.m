@@ -248,7 +248,7 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
         return nil;
     }
     
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html",@"text/plain", nil];
     
     //设置请求头
     for (NSString *headerField in headers.keyEnumerator) {
