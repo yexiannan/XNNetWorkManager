@@ -248,6 +248,8 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
         return nil;
     }
     
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html", nil];
+    
     //设置请求头
     for (NSString *headerField in headers.keyEnumerator) {
         [manager.requestSerializer setValue:headers[headerField] forHTTPHeaderField:headerField];
@@ -293,6 +295,8 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
                 progress(downloadProgress);
             }
         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n responseObject = %@",URLString,parameters,headers,responseObject);
+
             //移除缓存
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
@@ -300,6 +304,8 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
                 success(task,responseObject);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n error = %@",URLString,parameters,headers,error);
+
             //移除缓存
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
