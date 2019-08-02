@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString * const kNetWorkErrorTip;
+
 typedef NS_ENUM(NSInteger, HttpMethod) {
     HttpMethod_Post,
     HttpMethod_Get,
