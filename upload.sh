@@ -28,6 +28,4 @@ git add .
 git commit -am ${comment}
 git tag "${mainString}.${subString}.${NewShortString}"
 git push origin master --tags
-pod trunk push --verbose --allow-warnings --use-libraries --use-modular-headers --sources='http://luigi@192.168.0.127:10101/r/iOSComponentRepo/iOSComponentRepo, https://github.com/CocoaPods/Specs'
-
-pod trunk push --verbose --allow-warnings --use-libraries --use-modular-headers --sources='http://luigi@192.168.0.127:10101/r/iOSComponentRepo/iOSComponentRepo, https://github.com/CocoaPods/Specs'
+pod trunk push --verbose --allow-warnings --use-libraries --use-modular-headers

@@ -11,7 +11,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "SVProgressHUD.h"
 
-NSString * const kNetWorkingError = @"网络异常,请稍后再试!";
+NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
 
 @interface XNHTTPManage ()
 //请求缓存,避免请求重复提交
