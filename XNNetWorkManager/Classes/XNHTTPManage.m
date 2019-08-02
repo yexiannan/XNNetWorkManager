@@ -267,6 +267,8 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
                 progress(uploadProgress);
             }
         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n responseObject = %@",URLString,parameters,headers,responseObject);
+            
             //移除缓存
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
@@ -274,6 +276,8 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
                 success(task,responseObject);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n error = %@",URLString,parameters,headers,error);
+            
             //移除缓存
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
