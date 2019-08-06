@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "BaseModel.h"
 #import "XNHTTPManage.h"
 #import "XNHTTPSessionManager.h"
 

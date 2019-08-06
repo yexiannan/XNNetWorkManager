@@ -15,11 +15,13 @@ PODS:
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
   - SVProgressHUD (2.2.5)
-  - XNNetWorkManager (0.1.11):
+  - XNNetWorkManager (0.1.15):
     - AFNetworking
     - SVProgressHUD
     - XNUtils
+    - YYModel
   - XNUtils (0.2.2)
+  - YYModel (1.0.4)
 
 DEPENDENCIES:
   - XNNetWorkManager (from `../`)
@@ -29,6 +31,7 @@ SPEC REPOS:
     - AFNetworking
     - SVProgressHUD
     - XNUtils
+    - YYModel
 
 EXTERNAL SOURCES:
   XNNetWorkManager:
@@ -37,8 +40,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
-  XNNetWorkManager: af5c5fee17745fd9786862c89b13eb032d2a0f55
+  XNNetWorkManager: da04fd200b10ece048be073652c4c2b16fd50684
   XNUtils: 0b73458258d19ad9ed72a8289c652c912658a9ca
+  YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
 PODFILE CHECKSUM: ca5cf40c40e6866309d00134c3ba78a71e03c923
 
