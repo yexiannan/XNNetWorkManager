@@ -411,12 +411,16 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
                                
                            }
                             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+       NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n responseObject = %@",urlString,parameters,headers,responseObject);
+
                                 [self endSVProgressHUDWithHudAnimation:hudAnimation];
                                 [self removeRequestCacheWithUrl:urlString Param:duplicateParameters duplicateType:duplicateType];                                if (responseObject) {
                                     success(task, responseObject);
                                 }
                             }
                             failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n error = %@",urlString,parameters,headers,error);
+
                                 [self endSVProgressHUDWithHudAnimation:hudAnimation];
                                 [self removeRequestCacheWithUrl:urlString Param:duplicateParameters duplicateType:duplicateType];                                if (failure) {
                                     failure(task, error);
