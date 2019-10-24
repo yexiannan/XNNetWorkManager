@@ -84,6 +84,16 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
 
 #pragma mark - 配置AFHTTPSessionManager
 /**
+* Post配置requestSerializer Post: parameters: requestSerializer:: progress: success: failure:
+*/
++ (NSURLSessionDataTask *)Post:(NSString *)URLString
+       parameters:(nullable id)parameters
+     hudAnimation:(BOOL)hudAnimation
+requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
+          success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
+          failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure;
+
+/**
  * Post配置requestSerializer Post: parameters: requestSerializer: headers: progress: success: failure:
  */
 + (NSURLSessionDataTask *)Post:(NSString *)URLString

@@ -83,6 +83,24 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
 
 #pragma mark - 配置AFHTTPSessionManager
 /**
+* Post配置requestSerializer Post: parameters: requestSerializer:: progress: success: failure:
+*/
++ (NSURLSessionDataTask *)Post:(NSString *)URLString
+                    parameters:(nullable id)parameters
+                  hudAnimation:(BOOL)hudAnimation
+             requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
+                       success:(nullable void (^)(NSURLSessionDataTask * _Nonnull task, id _Nullable responseObject))success
+                       failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error))failure {
+    return [self Post:URLString
+           parameters:parameters
+         hudAnimation:hudAnimation
+    requestSerializer:requestSerializer
+              headers:[XNHTTPManage httpManager].headers
+              success:success
+              failure:failure];
+}
+
+/**
  * Post配置requestSerializer Post: parameters: requestSerializer: headers: progress: success: failure:
  */
 + (NSURLSessionDataTask *)Post:(NSString *)URLString
