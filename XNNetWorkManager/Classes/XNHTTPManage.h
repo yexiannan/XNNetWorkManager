@@ -11,7 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString * const kNetWorkErrorTip;
+extern NSString * kNetWorkErrorTip;//网络请求错误提示文字
+
+typedef BOOL(^responseSuccessOperating)(id _Nullable kResponseObject);//返回值BOOL决定请求是否返回结果
+typedef BOOL(^responseFailureOperating)(NSError * _Nonnull kEror);//返回值BOOL决定请求是否返回结果
 
 typedef NS_ENUM(NSInteger, HttpMethod) {
     HttpMethod_Post,
@@ -37,9 +40,11 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
 @class AFHTTPSessionManager;
 
 @interface XNHTTPManage : NSObject
-@property (nonatomic, strong) AFHTTPRequestSerializer *serializer;
-@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
-@property (nonatomic, copy, nullable) NSDictionary *headers;
+@property (nonatomic, strong)   AFHTTPRequestSerializer             *serializer;
+@property (nonatomic, strong)   AFSecurityPolicy                    *securityPolicy;
+@property (nonatomic, copy, nullable)   NSDictionary                *headers;
+@property (nonatomic, copy, nullable)   responseFailureOperating    failureOperating;
+@property (nonatomic, copy, nullable)   responseSuccessOperating    successOperating;
 
 + (XNHTTPManage *)httpManager;
 /**
@@ -47,12 +52,14 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
  */
 - (void)httpManagerInitWithAFHTTPRequestSerializer:(nonnull AFHTTPRequestSerializer *)serializer
                                   AFSecurityPolicy:(nullable AFSecurityPolicy *)securityPolicy
-                                           Headers:(nullable NSDictionary <NSString *, NSString *> *)headers;
+                                           Headers:(nullable NSDictionary <NSString *, NSString *> *)headers
+                          ResponseSuccessOperating:(responseSuccessOperating)successOperating
+                          ResponseFailureOperating:(responseFailureOperating)failureOperating;
 
 /**
  *  @param urlString 网络URL
  *  @param parameters 参数
- *  @param requestSerializer 默认AFHTTPRequestSerializer 可自定义缓存类型，超时等配置，默认超时时间20s
+ *  @param requestSerializer 默认AFHTTPRequestSerializer 可自定义缓存类型，超时等配置
  *  @param securityPolicy 默认defaultPolicy
  *  @param headers 请求头配置
  *  @param progress 上传、下载进度

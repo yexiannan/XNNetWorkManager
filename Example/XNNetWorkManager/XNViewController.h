@@ -9,5 +9,5 @@
 @import UIKit;
 
 @interface XNViewController : UIViewController
-
++ (void)loginOutWithAlertString:(NSString *)string;
 @end

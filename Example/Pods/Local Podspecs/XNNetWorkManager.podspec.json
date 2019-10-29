@@ -1,7 +1,7 @@
 {
   "name": "XNNetWorkManager",
-  "version": "0.1.15",
-  "summary": "A short description of XNNetWorkManager.",
+  "version": "0.1.19",
+  "summary": "对AFNetWorking封装的网络请求工具",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/yexiannan/XNNetWorkManager",
   "license": {
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/yexiannan/XNNetWorkManager.git",
-    "tag": "0.1.15"
+    "tag": "0.1.19"
   },
   "platforms": {
     "ios": "8.0"

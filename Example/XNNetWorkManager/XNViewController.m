@@ -9,6 +9,7 @@
 #import "XNViewController.h"
 #import "XNHTTPManage.h"
 #import "AFNetworking.h"
+#import "SVProgressHUD.h"
 
 @interface XNViewController ()
 
@@ -20,8 +21,27 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    [[XNHTTPManage httpManager] httpManagerInitWithAFHTTPRequestSerializer:[AFJSONRequestSerializer serializer] AFSecurityPolicy:[AFSecurityPolicy defaultPolicy] Headers:nil ResponseSuccessOperating:^BOOL(id  _Nullable kResponseObject) {
+        [XNViewController loginOutWithAlertString:@"6666666"];
+        return NO;
+    } ResponseFailureOperating:^BOOL(NSError * _Nonnull kEror) {
+        [XNViewController loginOutWithAlertString:@"6666666"];
+        return NO;
+    }];
+
     
 }
+
+
+//单点登录 login out
++ (void)loginOutWithAlertString:(NSString *)string {
+    
+   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+       UIAlertView *alertview = [[UIAlertView alloc]initWithTitle:string message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+       [alertview show];
+   });
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -33,7 +53,7 @@
     [XNHTTPManage Post:@"" parameters:nil hudAnimation:YES success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"----- responseObject = %@",responseObject);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"----- error = %@",error);
+        [SVProgressHUD showWithStatus:error.domain];
     }];
     
     

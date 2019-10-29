@@ -11,7 +11,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "SVProgressHUD.h"
 
-NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
+NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
 
 @interface XNHTTPManage ()
 //请求缓存,避免请求重复提交
@@ -32,10 +32,12 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
     return shareinstance;
 }
 
-- (void)httpManagerInitWithAFHTTPRequestSerializer:(AFHTTPRequestSerializer *)serializer AFSecurityPolicy:(AFSecurityPolicy *)securityPolicy Headers:(NSDictionary<NSString *,NSString *> *)headers{
+- (void)httpManagerInitWithAFHTTPRequestSerializer:(AFHTTPRequestSerializer *)serializer AFSecurityPolicy:(AFSecurityPolicy *)securityPolicy Headers:(NSDictionary<NSString *,NSString *> *)headers ResponseSuccessOperating:(nonnull responseSuccessOperating)successOperating ResponseFailureOperating:(nonnull responseFailureOperating)failureOperating{
     self.serializer = serializer;
     self.securityPolicy = securityPolicy;
     self.headers = headers;
+    self.successOperating = successOperating;
+    self.failureOperating = failureOperating;
 }
 
 #pragma mark - 基础请求
@@ -292,6 +294,10 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
             //移除缓存
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
+            if ([XNHTTPManage httpManager].successOperating) {
+                BOOL isContinue = [XNHTTPManage httpManager].successOperating(responseObject);
+                if (!isContinue) { return ; }
+            }
             if (success) {
                 success(task,responseObject);
             }
@@ -301,6 +307,10 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
             //移除缓存
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
+            if ([XNHTTPManage httpManager].failureOperating) {
+                BOOL isContinue = [XNHTTPManage httpManager].failureOperating(error);
+                if (!isContinue) { return ; }
+            }
             if (failure) {
                 failure(task,error);
             }
@@ -318,6 +328,10 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
             //移除缓存
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
+            if ([XNHTTPManage httpManager].successOperating) {
+                BOOL isContinue = [XNHTTPManage httpManager].successOperating(responseObject);
+                if (!isContinue) { return ; }
+            }
             if (success) {
                 success(task,responseObject);
             }
@@ -327,6 +341,10 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
             //移除缓存
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
+            if ([XNHTTPManage httpManager].failureOperating) {
+                BOOL isContinue = [XNHTTPManage httpManager].failureOperating(error);
+                if (!isContinue) { return ; }
+            }
             if (failure) {
                 failure(task,error);
             }
@@ -432,16 +450,30 @@ NSString * const kNetWorkErrorTip = @"网络异常,请稍后再试!";
        NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n responseObject = %@",urlString,parameters,headers,responseObject);
 
                                 [self endSVProgressHUDWithHudAnimation:hudAnimation];
-                                [self removeRequestCacheWithUrl:urlString Param:duplicateParameters duplicateType:duplicateType];                                if (responseObject) {
-                                    success(task, responseObject);
+                                [self removeRequestCacheWithUrl:urlString Param:duplicateParameters duplicateType:duplicateType];
+                                if (responseObject) {
+                                    if ([XNHTTPManage httpManager].successOperating) {
+                                        BOOL isContinue = [XNHTTPManage httpManager].successOperating(responseObject);
+                                        if (!isContinue) { return ; }
+                                    }
+                                    if (success) {
+                                        success(task, responseObject);
+                                    }
                                 }
                             }
                             failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n error = %@",urlString,parameters,headers,error);
 
                                 [self endSVProgressHUDWithHudAnimation:hudAnimation];
-                                [self removeRequestCacheWithUrl:urlString Param:duplicateParameters duplicateType:duplicateType];                                if (failure) {
-                                    failure(task, error);
+                                [self removeRequestCacheWithUrl:urlString Param:duplicateParameters duplicateType:duplicateType];
+                                if (failure) {
+                                    if ([XNHTTPManage httpManager].failureOperating) {
+                                        BOOL isContinue = [XNHTTPManage httpManager].failureOperating(error);
+                                        if (!isContinue) { return ; }
+                                    }
+                                    if (failure) {
+                                        failure(task, error);
+                                    }
                                 }
                             }];
     
