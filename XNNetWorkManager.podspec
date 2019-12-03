@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'XNNetWorkManager'
-  s.version          = '0.1.20'
+  s.version          = '0.1.21'
   s.summary          = '对AFNetWorking封装的网络请求工具'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+A network request class for AFNetWorking package, which can determine repeated submissions, set request headers and request types, and inject code before returning data after the request is completed.
                        DESC
 
   s.homepage         = 'https://github.com/yexiannan/XNNetWorkManager'
