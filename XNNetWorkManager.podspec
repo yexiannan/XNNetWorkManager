@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'XNNetWorkManager'
-  s.version          = '0.1.21'
+  s.version          = '0.1.22'
   s.summary          = '对AFNetWorking封装的网络请求工具'
 
 # This description is used to generate tags and improve search results.
@@ -40,10 +40,8 @@ A network request class for AFNetWorking package, which can determine repeated s
   # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'AFNetworking'
   s.dependency 'SVProgressHUD'
-  s.dependency 'XNUtils'
   s.dependency 'YYModel'
 
   
 #  s.user_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
-  s.prefix_header_contents = '#import "XNUtils.h"'
 end
