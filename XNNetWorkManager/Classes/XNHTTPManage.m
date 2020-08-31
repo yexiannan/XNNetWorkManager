@@ -61,7 +61,7 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
          hudAnimation:hudAnimation
     requestSerializer:[XNHTTPManage httpManager].serializer
        securityPolicy:[XNHTTPManage httpManager].securityPolicy
-              headers:[XNHTTPManage httpManager].headers
+              headers:nil
   duplicateParameters:nil
         duplicateType:DuplicateType_NotHandle
               success:success
@@ -82,7 +82,7 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
         hudAnimation:hudAnimation
    requestSerializer:[XNHTTPManage httpManager].serializer
       securityPolicy:[XNHTTPManage httpManager].securityPolicy
-             headers:[XNHTTPManage httpManager].headers
+             headers:nil
  duplicateParameters:nil
        duplicateType:DuplicateType_NotHandle
              success:success
@@ -103,7 +103,7 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
            parameters:parameters
          hudAnimation:hudAnimation
     requestSerializer:requestSerializer
-              headers:[XNHTTPManage httpManager].headers
+              headers:nil
               success:success
               failure:failure];
 }
@@ -277,6 +277,10 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html",@"text/plain", nil];
     
     //设置请求头
+    for (NSString *headerField in [XNHTTPManage httpManager].headers.keyEnumerator) {
+        [manager.requestSerializer setValue:[XNHTTPManage httpManager].headers[headerField] forHTTPHeaderField:headerField];
+    }
+    
     for (NSString *headerField in headers.keyEnumerator) {
         [manager.requestSerializer setValue:headers[headerField] forHTTPHeaderField:headerField];
     }
