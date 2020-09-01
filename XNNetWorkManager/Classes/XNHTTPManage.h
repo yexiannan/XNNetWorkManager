@@ -46,6 +46,8 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
 @property (nonatomic, copy, nullable)   responseFailureOperating    failureOperating;//请求失败注入代码
 @property (nonatomic, copy, nullable)   responseSuccessOperating    successOperating;//请求成功注入代码
 
+@property (assign, nonatomic) BOOL logEnable;
+
 + (XNHTTPManage *)httpManager;
 /**
  * 初始化网络请求模块

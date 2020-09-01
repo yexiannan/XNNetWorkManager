@@ -299,8 +299,9 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
                 progress(uploadProgress);
             }
         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n responseObject = %@",URLString,parameters,headers,responseObject);
-            
+            if ([XNHTTPManage httpManager].logEnable) {
+                NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n responseObject = %@",URLString,parameters,manager.requestSerializer.HTTPRequestHeaders,responseObject);
+            }
             //移除缓存
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
@@ -312,8 +313,9 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
                 success(task,responseObject);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n error = %@",URLString,parameters,headers,error);
-            
+            if ([XNHTTPManage httpManager].logEnable) {
+                NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n error = %@",URLString,parameters,manager.requestSerializer.HTTPRequestHeaders,error);
+            }
             //移除缓存
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
@@ -333,8 +335,9 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
                 progress(downloadProgress);
             }
         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n responseObject = %@",URLString,parameters,headers,responseObject);
-
+            if ([XNHTTPManage httpManager].logEnable) {
+                NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n responseObject = %@",URLString,parameters,manager.requestSerializer.HTTPRequestHeaders,responseObject);
+            }
             //移除缓存
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
@@ -346,8 +349,9 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
                 success(task,responseObject);
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n error = %@",URLString,parameters,headers,error);
-
+            if ([XNHTTPManage httpManager].logEnable) {
+                NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n error = %@",URLString,parameters,manager.requestSerializer.HTTPRequestHeaders,error);
+            }
             //移除缓存
             [self removeRequestCacheWithUrl:URLString Param:duplicateParameters duplicateType:duplicateType];
             [self endSVProgressHUDWithHudAnimation:hudAnimation];
@@ -428,6 +432,10 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
         manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     }
     
+    for (NSString *headerField in [XNHTTPManage httpManager].headers.keyEnumerator) {
+        [manager.requestSerializer setValue:[XNHTTPManage httpManager].headers[headerField] forHTTPHeaderField:headerField];
+    }
+    
     for (NSString *headerField in headers.keyEnumerator) {
         [manager.requestSerializer setValue:headers[headerField] forHTTPHeaderField:headerField];
     }
@@ -457,7 +465,10 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
                                
                            }
                             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-       NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n responseObject = %@",urlString,parameters,headers,responseObject);
+        
+        if ([XNHTTPManage httpManager].logEnable) {
+            NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n responseObject = %@",urlString,parameters,manager.requestSerializer.HTTPRequestHeaders,responseObject);
+        }
 
                                 [self endSVProgressHUDWithHudAnimation:hudAnimation];
                                 [self removeRequestCacheWithUrl:urlString Param:duplicateParameters duplicateType:duplicateType];
@@ -472,7 +483,9 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
                                 }
                             }
                             failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n error = %@",urlString,parameters,headers,error);
+        if ([XNHTTPManage httpManager].logEnable) {
+            NSLog(@"-----url = %@,\n param = %@,\n header = %@,\n error = %@",urlString,parameters,manager.requestSerializer.HTTPRequestHeaders,error);
+        }
 
                                 [self endSVProgressHUDWithHudAnimation:hudAnimation];
                                 [self removeRequestCacheWithUrl:urlString Param:duplicateParameters duplicateType:duplicateType];
