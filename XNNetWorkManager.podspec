@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'XNNetWorkManager'
-  s.version          = '0.1.24'
+  s.version          = '0.1.25'
   s.summary          = '对AFNetWorking封装的网络请求工具'
 
 # This description is used to generate tags and improve search results.

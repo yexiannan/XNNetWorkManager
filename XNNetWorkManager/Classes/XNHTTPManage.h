@@ -41,6 +41,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
 
 @interface XNHTTPManage : NSObject
 @property (nonatomic, strong)   AFHTTPRequestSerializer             *serializer;
+@property (nonatomic, strong)   AFHTTPResponseSerializer            *responseSerializer;
 @property (nonatomic, strong)   AFSecurityPolicy                    *securityPolicy;
 @property (nonatomic, copy, nullable)   NSDictionary                *headers;
 @property (nonatomic, copy, nullable)   responseFailureOperating    failureOperating;//请求失败注入代码
@@ -53,6 +54,7 @@ typedef NS_ENUM(NSInteger ,HTTPManager_DuplicateType) {
  * 初始化网络请求模块
  */
 - (void)httpManagerInitWithAFHTTPRequestSerializer:(nonnull AFHTTPRequestSerializer *)serializer
+                          AFHTTPResponseSerializer:(nullable AFHTTPResponseSerializer *)responseSerializer
                                   AFSecurityPolicy:(nullable AFSecurityPolicy *)securityPolicy
                                            Headers:(nullable NSDictionary <NSString *, NSString *> *)headers
                           ResponseSuccessOperating:(responseSuccessOperating)successOperating

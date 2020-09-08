@@ -32,19 +32,27 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
         shareinstance = [[self alloc] init];
         shareinstance.requestCache = [[NSMutableDictionary alloc] init];
         shareinstance.serializer = [AFHTTPRequestSerializer serializer];
+        shareinstance.responseSerializer = [AFJSONResponseSerializer serializer];
         shareinstance.securityPolicy = [AFSecurityPolicy defaultPolicy];
         shareinstance.headers = nil;
     });
     return shareinstance;
 }
 
-- (void)httpManagerInitWithAFHTTPRequestSerializer:(AFHTTPRequestSerializer *)serializer AFSecurityPolicy:(AFSecurityPolicy *)securityPolicy Headers:(NSDictionary<NSString *,NSString *> *)headers ResponseSuccessOperating:(nonnull responseSuccessOperating)successOperating ResponseFailureOperating:(nonnull responseFailureOperating)failureOperating{
+- (void)httpManagerInitWithAFHTTPRequestSerializer:(AFHTTPRequestSerializer *)serializer
+                          AFHTTPResponseSerializer:(AFHTTPResponseSerializer *)responseSerializer
+                                  AFSecurityPolicy:(AFSecurityPolicy *)securityPolicy
+                                           Headers:(NSDictionary<NSString *,NSString *> *)headers
+                          ResponseSuccessOperating:(responseSuccessOperating)successOperating
+                          ResponseFailureOperating:(responseFailureOperating)failureOperating {
     self.serializer = serializer;
+    self.responseSerializer = responseSerializer;
     self.securityPolicy = securityPolicy;
     self.headers = headers;
     self.successOperating = successOperating;
     self.failureOperating = failureOperating;
 }
+
 
 #pragma mark - 基础请求
 /**
@@ -166,6 +174,7 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
     
     AFHTTPSessionManager *manager = [XNHTTPSessionManager sharedHttpPostSessionManager];
     manager.requestSerializer = requestSerializer;
+    manager.responseSerializer = [XNHTTPManage httpManager].responseSerializer;
     manager.securityPolicy = securityPolicy;
     
     return [self httpMethod:HttpMethod_Post
@@ -240,6 +249,7 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
     
     AFHTTPSessionManager *manager = [XNHTTPSessionManager sharedHttpPostSessionManager];
     manager.requestSerializer = requestSerializer;
+    manager.responseSerializer = [XNHTTPManage httpManager].responseSerializer;
     manager.securityPolicy = securityPolicy;
     
     return [self httpMethod:HttpMethod_Get
