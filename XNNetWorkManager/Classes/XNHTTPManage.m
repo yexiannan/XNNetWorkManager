@@ -340,6 +340,7 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
         
     } else if (httpMethod == HttpMethod_Get) {
         
+        
         sessionDataTask = [manager GET:URLString parameters:parameters headers:nil progress:^(NSProgress * _Nonnull downloadProgress) {
             if (progress) {
                 progress(downloadProgress);
