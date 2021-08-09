@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'XNNetWorkManager'
-  s.version          = '0.1.25'
+  s.version          = '0.1.27'
   s.summary          = '对AFNetWorking封装的网络请求工具'
 
 # This description is used to generate tags and improve search results.
@@ -28,7 +28,7 @@ A network request class for AFNetWorking package, which can determine repeated s
   s.source           = { :git => 'https://github.com/yexiannan/XNNetWorkManager.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
 
   s.source_files = 'XNNetWorkManager/Classes/**/*'
   
@@ -38,7 +38,7 @@ A network request class for AFNetWorking package, which can determine repeated s
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'AFNetworking'
+  s.dependency 'AFNetworking', '~> 4.0'
   s.dependency 'SVProgressHUD'
   s.dependency 'YYModel'
 

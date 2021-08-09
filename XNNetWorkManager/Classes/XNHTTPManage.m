@@ -303,8 +303,8 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
     }
     
     if (httpMethod == HttpMethod_Post) {
-        
-        sessionDataTask = [manager POST:URLString parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
+
+        sessionDataTask = [manager POST:URLString parameters:parameters headers:nil progress:^(NSProgress * _Nonnull uploadProgress) {
             if (progress) {
                 progress(uploadProgress);
             }
@@ -340,7 +340,7 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
         
     } else if (httpMethod == HttpMethod_Get) {
         
-        sessionDataTask = [manager GET:URLString parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
+        sessionDataTask = [manager GET:URLString parameters:parameters headers:nil progress:^(NSProgress * _Nonnull downloadProgress) {
             if (progress) {
                 progress(downloadProgress);
             }
@@ -459,6 +459,7 @@ NSString * kNetWorkErrorTip = @"网络异常,请稍后再试!";
     
     sessionDataTask = [manager POST:urlString
                          parameters:parameters
+                            headers:nil
           constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
               [imageDataArray enumerateObjectsUsingBlock:^(NSData * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                   if (obj) {

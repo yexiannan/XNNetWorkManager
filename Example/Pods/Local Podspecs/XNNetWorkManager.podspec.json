@@ -1,6 +1,6 @@
 {
   "name": "XNNetWorkManager",
-  "version": "0.1.23",
+  "version": "0.1.25",
   "summary": "对AFNetWorking封装的网络请求工具",
   "description": "A network request class for AFNetWorking package, which can determine repeated submissions, set request headers and request types, and inject code before returning data after the request is completed.",
   "homepage": "https://github.com/yexiannan/XNNetWorkManager",
@@ -13,15 +13,15 @@
   },
   "source": {
     "git": "https://github.com/yexiannan/XNNetWorkManager.git",
-    "tag": "0.1.23"
+    "tag": "0.1.25"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0"
   },
   "source_files": "XNNetWorkManager/Classes/**/*",
   "dependencies": {
     "AFNetworking": [
-
+      "~> 4.0"
     ],
     "SVProgressHUD": [
 

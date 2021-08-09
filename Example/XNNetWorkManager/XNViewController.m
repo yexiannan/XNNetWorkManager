@@ -21,13 +21,15 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    [[XNHTTPManage httpManager] httpManagerInitWithAFHTTPRequestSerializer:[AFJSONRequestSerializer serializer] AFSecurityPolicy:[AFSecurityPolicy defaultPolicy] Headers:nil ResponseSuccessOperating:^BOOL(id  _Nullable kResponseObject) {
-        [XNViewController loginOutWithAlertString:@"6666666"];
-        return NO;
-    } ResponseFailureOperating:^BOOL(NSError * _Nonnull kEror) {
-        [XNViewController loginOutWithAlertString:@"6666666"];
-        return NO;
-    }];
+    
+    
+//    [[XNHTTPManage httpManager] httpManagerInitWithAFHTTPRequestSerializer:[AFJSONRequestSerializer serializer] AFSecurityPolicy:[AFSecurityPolicy defaultPolicy] Headers:nil ResponseSuccessOperating:^BOOL(id  _Nullable kResponseObject) {
+//        [XNViewController loginOutWithAlertString:@"6666666"];
+//        return NO;
+//    } ResponseFailureOperating:^BOOL(NSError * _Nonnull kEror) {
+//        [XNViewController loginOutWithAlertString:@"6666666"];
+//        return NO;
+//    }];
 
     
 }
